@@ -13,7 +13,6 @@
 </template>
 
 <script>
-import MyButton from './UI/MyButton.vue';
 export default {
     props: {
         post: {
@@ -21,7 +20,6 @@ export default {
             required: true
         }
     },
-    components: { MyButton }
 }
 </script>
 
