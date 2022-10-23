@@ -1,7 +1,20 @@
 <template>
     <div class="app">
-        <PostForm @create="createPost" />
-        <PostList :posts="posts"/>
+        <h1>Страница с постами</h1>
+        <MyButton
+            @click="showDialog"
+            style="margin: 15px 0;">
+            Создать пост
+        </MyButton>
+        <MyDialog v-model:show="dialogVisible">
+            <PostForm 
+                @create="createPost" 
+            />
+        </MyDialog>
+        <PostList 
+            :posts="posts"
+            @remove="removePost"
+        />
     </div>
 </template>
 
@@ -11,9 +24,9 @@ import PostList from '@/components/PostList.vue'
 
 export default {
     components: {
-        PostForm,
-        PostList
-    },
+    PostForm,
+    PostList,
+},
     data() {
         return {
             posts: [
@@ -21,11 +34,19 @@ export default {
                 {id: 2, title: 'Python', body: 'Всё о Python'},
                 {id: 3, title: 'C++' , body: 'Всё о C++'},
             ],
+            dialogVisible: false
         }
     },
     methods: {
         createPost(post) {
            this.posts.push(post)
+           this.dialogVisible = false
+        },
+        removePost(post) {
+            this.posts = this.posts.filter(el => el.id !== post.id)
+        },
+        showDialog() {
+            this.dialogVisible = true
         }
     }
 }
