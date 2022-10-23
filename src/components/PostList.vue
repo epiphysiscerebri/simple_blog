@@ -1,4 +1,5 @@
 <template>
+    <!-- Компонент списка постов -->
     <div v-if="posts.length > 0">
         <h3>Список постов</h3>
         <PostItem 

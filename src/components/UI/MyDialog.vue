@@ -1,4 +1,5 @@
 <template>
+    <!-- Переиспользуемый компонент модального окна -->
     <div class="dialog" v-if="show" @click="hideDialog">
         <div @click.stop class="dialog_content">
             <slot></slot>

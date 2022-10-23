@@ -1,4 +1,5 @@
 <template>
+    <!-- Компонент формы -->
     <form @submit.prevent>
         <h4> Создание поста</h4>
         <MyInput 

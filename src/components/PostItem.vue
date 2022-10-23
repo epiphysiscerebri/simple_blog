@@ -1,4 +1,5 @@
 <template>
+    <!-- Компонент каждого отдельного поста -->
     <div class="post">
         <div>
             <div><strong>Название: </strong>{{ post.title }}</div>

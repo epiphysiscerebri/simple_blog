@@ -1,4 +1,5 @@
 <template>
+    <!-- Переиспользуемый компонент кнопки -->
     <button class="btn">
         <slot></slot>
     </button>
