@@ -73,6 +73,14 @@ export default {
             }
         }
     },
+    watch: {
+        // Сортировка
+        selectedSort(newValue) {
+            this.posts.sort((post1, post2) => {
+                return post1[newValue]?.localeCompare(post2[newValue])
+            })
+        }
+    },
     mounted() {
         this.fetchPosts()
     }
