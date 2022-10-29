@@ -18,7 +18,7 @@
             />
         </MyDialog>
         <PostList 
-            :posts="posts"
+            :posts="sortedPosts"
             @remove="removePost"
             v-if="!isPostsLoading"
         />
@@ -73,14 +73,13 @@ export default {
             }
         }
     },
-    watch: {
+    computed: {
         // Сортировка
-        selectedSort(newValue) {
-            this.posts.sort((post1, post2) => {
-                return post1[newValue]?.localeCompare(post2[newValue])
-            })
+        sortedPosts() {
+            return [...this.posts].sort((post1, post2) =>  post1[this.selectedSort]?.localeCompare(post2[this.selectedSort]))
         }
     },
+    watch: {},
     mounted() {
         this.fetchPosts()
     }
