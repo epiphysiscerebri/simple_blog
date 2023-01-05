@@ -29,7 +29,8 @@
         <div v-else>
             Идёт загрузка постов..
         </div>
-        <div class="page_wrapper">
+        <div ref="observer"></div>
+        <!-- <div class="page_wrapper">
             <div v-for="pageNumber in totalPages" 
                 :key="pageNumber" 
                 class="page" 
@@ -38,7 +39,7 @@
                 }"
                 @click="changePage(pageNumber)"
                 >{{ pageNumber }}</div>
-        </div>
+        </div> -->
     </div>
 </template>
 
@@ -70,19 +71,23 @@ export default {
         }
     },
     methods: {
+        // Функция создания поста
         createPost(post) {
            this.posts.push(post)
            this.dialogVisible = false
         },
+        // Функция удаления поста
         removePost(post) {
             this.posts = this.posts.filter(el => el.id !== post.id)
         },
+        // Функция открытия модального окна
         showDialog() {
             this.dialogVisible = true
         },
-        changePage(pageNumber) {
-            this.page = pageNumber
-        },
+        // changePage(pageNumber) {
+        //     this.page = pageNumber
+        // },
+        // Функция с запросом для получения постов с сервера
         async fetchPosts() {
             try {
                 this.isPostsLoading = true
@@ -99,6 +104,23 @@ export default {
             } finally {
                 this.isPostsLoading = false
             }
+        },
+        // Функция для подгрузки постов при долистывании страницы до конца
+        async loadMorePosts() {
+            try {
+                this.page += 1
+                    const respons = await axios.get('https://jsonplaceholder.typicode.com/posts', {
+                        params: {
+                            _page: this.page,
+                            _limit: this.limit  
+                        }
+                    })
+                    this.totalPages = Math.ceil(respons.headers['x-total-count'] / this.limit)
+                    this.posts = [...this.posts, ...respons.data]
+            } catch(e) {
+                console.log('Ошибка')
+            } finally {
+            }
         }
     },
     computed: {
@@ -112,13 +134,27 @@ export default {
         },
     },
     watch: {
-        page() {
-            this.fetchPosts()
-        }
+        // page() {
+        //     this.fetchPosts()
+        // }
     },
     mounted() {
         this.fetchPosts()
-    }
+        // Intersection Observer API
+        let options = {
+            rootMargin: '0px',
+            threshold: 1.0
+        }
+
+        let callback = (entries, observer) => {
+            if (entries[0].isIntersecting && this.page < this.totalPages) {
+                this.loadMorePosts()
+            }
+        };
+
+        let observer = new IntersectionObserver(callback, options);
+            observer.observe(this.$refs.observer)
+         }
 }
 </script>
 
