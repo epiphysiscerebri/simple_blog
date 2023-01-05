@@ -2,6 +2,7 @@
     <!-- Компонент каждого отдельного поста -->
     <div class="post">
         <div>
+            <div>{{ post.id }}</div>
             <div><strong>Название: </strong>{{ post.title }}</div>
             <div><strong>Cодержание: </strong>{{ post.body }}</div>
         </div>

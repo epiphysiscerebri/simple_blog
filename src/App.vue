@@ -29,6 +29,16 @@
         <div v-else>
             Идёт загрузка постов..
         </div>
+        <div class="page_wrapper">
+            <div v-for="pageNumber in totalPages" 
+                :key="pageNumber" 
+                class="page" 
+                :class="{
+                    'current_page': page === pageNumber
+                }"
+                @click="changePage(pageNumber)"
+                >{{ pageNumber }}</div>
+        </div>
     </div>
 </template>
 
@@ -49,6 +59,9 @@ export default {
             isPostsLoading: false,
             selectedSort: '',
             searchQuery: '',
+            page: 1,  
+            limit: 10,
+            totalPages: 0,
             sortOptions: [
                 {value: 'title', name: 'По названию'},
                 {value: 'body', name: 'По содержимому'}
@@ -67,10 +80,19 @@ export default {
         showDialog() {
             this.dialogVisible = true
         },
+        changePage(pageNumber) {
+            this.page = pageNumber
+        },
         async fetchPosts() {
             try {
                 this.isPostsLoading = true
-                    const respons = await axios.get('https://jsonplaceholder.typicode.com/posts?_limit=10')
+                    const respons = await axios.get('https://jsonplaceholder.typicode.com/posts', {
+                        params: {
+                            _page: this.page,
+                            _limit: this.limit  
+                        }
+                    })
+                    this.totalPages = Math.ceil(respons.headers['x-total-count'] / this.limit)
                     this.posts = respons.data
             } catch(e) {
                 console.log('Ошибка')
@@ -89,7 +111,11 @@ export default {
             return this.sortedPosts.filter(post => post.title.toLowerCase().includes(this.searchQuery.toLowerCase()))
         },
     },
-    watch: {},
+    watch: {
+        page() {
+            this.fetchPosts()
+        }
+    },
     mounted() {
         this.fetchPosts()
     }
@@ -110,5 +136,18 @@ export default {
     display: flex;
     justify-content: space-between;
     margin: 15px 0;
+}
+.page_wrapper {
+    display: flex;
+    margin-top: 15px;
+}
+.page {
+    border: 1px solid black;
+    width: 30px;
+    text-align: center;
+    margin-right: 2px;
+}
+.current_page {
+    border: 2px solid purple;
 }
 </style>
