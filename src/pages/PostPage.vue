@@ -2,6 +2,7 @@
     <div>
         <h1>Страница с постами</h1>
         <MyInput
+            v-focus
             v-model="searchQuery"
             placeholder="Поиск.."
         />
@@ -28,7 +29,7 @@
         <div v-else>
             Идёт загрузка постов..
         </div>
-        <div ref="observer"></div>
+        <div v-intersection="loadMorePosts"></div>
         <!-- <div class="page_wrapper">
             <div v-for="pageNumber in totalPages" 
                 :key="pageNumber" 
@@ -140,20 +141,20 @@ export default {
     mounted() {
         this.fetchPosts()
         // Intersection Observer API
-        let options = {
-            rootMargin: '0px',
-            threshold: 1.0
-        }
+        // let options = {
+        //     rootMargin: '0px',
+        //     threshold: 1.0
+        // }
 
-        let callback = (entries, observer) => {
-            if (entries[0].isIntersecting && this.page < this.totalPages) {
-                this.loadMorePosts()
-            }
-        };
+        // let callback = (entries, observer) => {
+        //     if (entries[0].isIntersecting && this.page < this.totalPages) {
+        //         this.loadMorePosts()
+        //     }
+        // };
 
-        let observer = new IntersectionObserver(callback, options);
-            observer.observe(this.$refs.observer)
-         }
+        // let observer = new IntersectionObserver(callback, options);
+        //     observer.observe(this.$refs.observer)
+    }
 }
 </script>
 
